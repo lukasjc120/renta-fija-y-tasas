@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plazos Fijos + Carry Trade | BCRA Auto</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Comparador de Plazos Fijos</h1>
+            <p class="subtitle">Tasas BCRA + Dólar Blue en tiempo real</p>
+            <div class="update-badge" id="updateBadge">Cargando...</div>
+        </header>
+
+        <section class="calculator">
+            <h2>Calculadora TNA/TEA</h2>
+            <div class="calc-grid">
+                <div class="input-group">
+                    <label for="monto">Monto a invertir</label>
+                    <input type="number" id="monto" value="100000">
+                </div>
+                <div class="input-group">
+                    <label for="dias">Días de plazo</label>
+                    <input type="number" id="dias" value="30">
+                </div>
+                <div class="input-group">
+                    <label for="tna">TNA %</label>
+                    <input type="number" id="tna" value="23.5" step="0.01">
+                </div>
+            </div>
+            <div class="results">
+                <div class="result-card">
+                    <span class="label">Interés TNA</span>
+                    <span class="value" id="interesTNA">$0</span>
+                </div>
+                <div class="result-card">
+                    <span class="label">Interés TEA</span>
+                    <span class="value" id="interesTEA">$0</span>
+                </div>
+                <div class="result-card total">
+                    <span class="label">Total con TNA</span>
+                    <span class="value" id="totalTNA">$0</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="table-section">
+            <div class="table-header">
+                <h2>Tasas Plazo Fijo - 30 días</h2>
+                <input type="text" id="search" placeholder="Buscar banco...">
+            </div>
+            <div class="table-wrapper">
+                <table id="tasasTable">
+                    <thead>
+                        <tr>
+                            <th>Banco</th>
+                            <th>TNA</th>
+                            <th>TEA</th>
+                            <th>Ganancia 30d / $100k</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr><td colspan="4" style="text-align:center">Cargando tasas...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="chart-section">
+            <div class="table-header">
+                <h2>Evolución de Tasas</h2>
+                <div class="chart-controls">
+                    <select id="bancoSelect">
+                        <option value="">Seleccionar banco...</option>
+                    </select>
+                    <div class="period-buttons">
+                        <button data-periodo="1d">1D</button>
+                        <button data-periodo="1w">1S</button>
+                        <button data-periodo="1m" class="active">1M</button>
+                        <button data-periodo="3m">3M</button>
+                        <button data-periodo="6m">6M</button>
+                        <button data-periodo="1y">1A</button>
+                    </div>
+                </div>
+            </div>
+            <canvas id="chartTasas"></canvas>
+        </section>
+
+        <section class="carry-section">
+            <h2>Calculadora de Carry Trade</h2>
+            <p class="section-desc">Compará plazo fijo vs dólar. Se actualiza automático con dólar blue.</p>
+            <div class="calc-grid">
+                <div class="input-group">
+                    <label for="montoCarry">Monto en pesos</label>
+                    <input type="number" id="montoCarry" value="1000000">
+                </div>
+                <div class="input-group">
+                    <label for="tnaCarry">TNA Plazo Fijo %</label>
+                    <input type="number" id="tnaCarry" value="23.5" step="0.01">
+                </div>
+                <div class="input-group">
+                    <label for="dolarHoy">Dólar Blue hoy</label>
+                    <input type="number" id="dolarHoy" value="1200" step="0.01">
+                </div>
+                <div class="input-group">
+                    <label for="dolarFuturo">Dólar estimado 30d</label>
+                    <input type="number" id="dolarFuturo" value="1220" step="0.01">
+                </div>
+            </div>
+            <div class="results">
+                <div class="result-card">
+                    <span class="label">Si hacés Plazo Fijo</span>
+                    <span class="value" id="resultadoPF">$0</span>
+                    <span class="subtext" id="rendimientoPF">0%</span>
+                </div>
+                <div class="result-card">
+                    <span class="label">Si comprás dólares</span>
+                    <span class="value" id="resultadoDolar">$0</span>
+                    <span class="subtext" id="rendimientoDolar">0%</span>
+                </div>
+                <div class="result-card total" id="cardVeredicto">
+                    <span class="label">Veredicto</span>
+                    <span class="value" id="veredicto">Calculando...</span>
+                    <span class="subtext" id="diferencia">$0</span>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Datos: BCRA + Bluelytics. Actualización automática cada hora.</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
