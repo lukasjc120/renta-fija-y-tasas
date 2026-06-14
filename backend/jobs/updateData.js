@@ -32,7 +32,8 @@ async function actualizarTasas() {
             `, [banco.entidad, banco.tnaClientes, banco.tnaClientes]);
 
             const = await db.query('SELECT id FROM bancos_tasas WHERE nombre =?', [banco.entidad]);
-            if (rows.length) {
+
+            if (rows.length > 0) {
                 await db.query(
                     'INSERT INTO historial_tasas (banco_id, tna, fecha) VALUES (?,?, CURDATE()) ON DUPLICATE KEY UPDATE tna =?',
                     [rows[0].id, banco.tnaClientes, banco.tnaClientes]
