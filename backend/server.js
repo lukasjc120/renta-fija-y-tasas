@@ -7,20 +7,37 @@ const apiRoutes = require('./routes/api');
 const { actualizarDolar, actualizarTasas } = require('./jobs/updateData');
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
+
 app.use('/api', apiRoutes);
 app.use(express.static('../frontend'));
 
-const PORT = process.env.PORT || 3001;
+// Fuerza el puerto 3001
+const PORT = 3001;
 
-app.listen(PORT, () => {
+console.log('Puerto configurado:', PORT);
+
+app.listen(PORT, async () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
-    actualizarDolar();
-    actualizarTasas();
-    cron.schedule('0 * * * *', () => {
+
+    try {
+        await actualizarDolar();
+        await actualizarTasas();
+    } catch (err) {
+        console.error('Error en actualización inicial:', err);
+    }
+
+    // Ejecutar cada hora
+    cron.schedule('0 * * * *', async () => {
         console.log('Ejecutando actualización automática...');
-        actualizarDolar();
-        actualizarTasas();
+
+        try {
+            await actualizarDolar();
+            await actualizarTasas();
+        } catch (err) {
+            console.error('Error en cron:', err);
+        }
     });
 });
